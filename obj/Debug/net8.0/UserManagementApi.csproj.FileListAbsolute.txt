@@ -139,3 +139,5 @@ D:\Project-API\UserManagementApi\bin\Debug\net8.0\runtimes\win-arm\native\e_sqli
 D:\Project-API\UserManagementApi\bin\Debug\net8.0\runtimes\win-arm64\native\e_sqlite3.dll
 D:\Project-API\UserManagementApi\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 D:\Project-API\UserManagementApi\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
+D:\Project-API\UserManagementApi\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\Project-API\UserManagementApi\obj\Debug\net8.0\UserManagementApi.sourcelink.json
