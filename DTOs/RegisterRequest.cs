@@ -1,3 +1,4 @@
+namespace UserManagementApi.DTOs;
 public class RegisterRequest
 {
   public string Username { get; set; } = "";
