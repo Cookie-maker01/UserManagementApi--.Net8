@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen( c =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=users.db"));
+    options.UseSqlite("Data Source=UserManagementDb.sqlite"));
 
 
 var app = builder.Build();

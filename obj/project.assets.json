@@ -3164,7 +3164,7 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.25",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.24",
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.24",
-      "Swashbuckle.AspNetCore >= 6.6.0"
+      "Swashbuckle.AspNetCore >= 6.6.1"
     ]
   },
   "packageFolders": {
@@ -3236,7 +3236,7 @@
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
-            "version": "[6.6.0, )"
+            "version": "[6.6.1, )"
           }
         },
         "imports": [
@@ -3261,17 +3261,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.419/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "UserManagementApi 依赖于 Swashbuckle.AspNetCore (>= 6.6.0)，但找不到 Swashbuckle.AspNetCore 6.6.0。 已解决 Swashbuckle.AspNetCore 6.6.1 的近似最佳匹配。 ",
-      "libraryId": "Swashbuckle.AspNetCore",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  }
 }
