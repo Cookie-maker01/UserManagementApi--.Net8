@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen( c =>
 {
@@ -48,7 +47,11 @@ builder.Services.AddSwaggerGen( c =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=UserManagementDb.sqlite"));
 
-var key = "THIS_IS_MY_SECRET_KEY_654321";
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+
+var key = jwtSettings["Key"]!;
+var issuer = jwtSettings["Issuer"]!;
+var audience = jwtSettings["Audience"]!;
 
 builder.Services.AddAuthentication(options =>
 {
@@ -59,11 +62,16 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+        
     };
 });
 

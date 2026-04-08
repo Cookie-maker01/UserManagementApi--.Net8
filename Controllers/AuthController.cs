@@ -54,11 +54,13 @@ public class AuthController : ControllerBase
     };
 
     var key = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes("THIS_IS_MY_SECRET_KEY_654321"));
+        Encoding.UTF8.GetBytes("THIS_IS_MY_SECRET_KEY_9876543210"));
 
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
+        issuer: "UserManagementApi",
+        audience: "UserManagementApiUsers",
         claims: claims,
         expires: DateTime.Now.AddHours(1),
         signingCredentials: creds);
