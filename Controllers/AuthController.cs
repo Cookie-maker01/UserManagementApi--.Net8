@@ -29,7 +29,8 @@ public class AuthController : ControllerBase
     {
       Username = request.Username,
       Email = request.Email,
-      PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+      PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+      Role = "User"
     };
 
     _db.Users.Add(user);
