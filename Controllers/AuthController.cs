@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
       Username = request.Username,
       Email = request.Email,
       PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-      Role = "User"
+      Role = request.Role
     };
 
     _db.Users.Add(user);
