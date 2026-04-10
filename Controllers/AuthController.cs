@@ -69,6 +69,19 @@ public class AuthController : ControllerBase
     
     var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-    return Ok (new { token = jwt });
+    var refreshToken = new RefreshToken
+    {
+      Token = Guid.NewGuid().ToString(),
+      UserId = user.Id,
+      Expires = DateTime.UtcNow.AddDays(7)
+    };
+
+    _db.RefreshTokens.Add(refreshToken);
+    await _db.SaveChangesAsync();
+
+    return Ok (new 
+    { 
+      accessToken = jwt,
+      refreshToken = refreshToken.Token });
   }
 }
