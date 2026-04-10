@@ -16,10 +16,12 @@ namespace UserManagementApi.Controllers;
 public class AuthController : ControllerBase
 {
   private readonly AppDbContext _db;
+  private readonly IConfiguration _configuration;
 
-  public AuthController(AppDbContext db)
+  public AuthController(AppDbContext db, IConfiguration configuration)
   {
     _db = db;
+    _configuration = configuration;
   }
 
   [HttpPost("register")]
@@ -56,13 +58,13 @@ public class AuthController : ControllerBase
     };
 
     var key = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes("THIS_IS_MY_SECRET_KEY_9876543210"));
+        Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
-        issuer: "UserManagementApi",
-        audience: "UserManagementApiUsers",
+        issuer: _configuration["Jwt:Issuer"],
+        audience: _configuration["Jwt:Audience"],
         claims: claims,
         expires: DateTime.Now.AddHours(1),
         signingCredentials: creds);
@@ -83,5 +85,51 @@ public class AuthController : ControllerBase
     { 
       accessToken = jwt,
       refreshToken = refreshToken.Token });
+  }
+
+  [HttpPost("refresh")]
+  public async Task<IActionResult> Refresh(TokenRequest request)
+  {
+    var storedToken = await _db.RefreshTokens
+       .FirstOrDefaultAsync(t => t.Token == request.RefreshToken);
+
+    if(storedToken == null || storedToken.IsRevoked || storedToken.Expires < DateTime.UtcNow)
+    {
+      return Unauthorized("Invalid refresh token");
+    }
+
+    storedToken.IsRevoked = true;
+    await _db.SaveChangesAsync();
+
+    var user = await _db.Users.FindAsync(storedToken.UserId);
+    if (user == null)
+       return Unauthorized("User not found");
+
+    var claims = new[]
+    {
+      new Claim(ClaimTypes.Name, user.Username),
+      new Claim(ClaimTypes.Email, user.Email),
+      new Claim(ClaimTypes.Role, user.Role)
+    };
+
+    var key = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: _configuration["Jwt:Issuer"],
+        audience: _configuration["Jwt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddMinutes(15),
+        signingCredentials: creds
+    );
+
+    var newAccessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+    return Ok(new
+    {
+      accessToken = newAccessToken
+    });
   }
 }
