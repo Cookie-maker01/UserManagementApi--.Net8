@@ -88,7 +88,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("refresh")]
-  public async Task<IActionResult> Refresh(TokenRequest request)
+  public async Task<IActionResult> Refresh(RefreshTokenRequest request)
   {
     var storedToken = await _db.RefreshTokens
        .FirstOrDefaultAsync(t => t.Token == request.RefreshToken);
