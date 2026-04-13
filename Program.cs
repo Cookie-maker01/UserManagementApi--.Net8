@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UserManagementApi.Data;
+using UserManagementApi.Repositories.Interfaces;
+using UserManagementApi.Repositories.Implementations;
+using UserManagementApi.Services.Interfaces;
+using UserManagementApi.Services.Implementations;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +56,11 @@ var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = jwtSettings["Key"]!;
 var issuer = jwtSettings["Issuer"]!;
 var audience = jwtSettings["Audience"]!;
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+//builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAuthentication(options =>
 {
